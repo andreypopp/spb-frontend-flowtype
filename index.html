@@ -208,27 +208,32 @@ window.onload = function() {
 </div>
 
 <div>
-  Dynamic analysis performs checks at runtime.
+  <div em line>// Dynamic</div>
+
+  Performs checks at runtime.
 </div>
 
 <div>
-  Thinks in terms of what's <em>happening</em> at some concrete moment of execution.
+  <div em line>// Dynamic</div>
+
+  About what's happening with values at some concrete moment of execution.
 </div>
 
 <div>
-  Static analysis extracts knowledge from code without exectuing it.
+  <div em line>// Static</div>
+
+  Extracts knowledge from code without exectuing it.
 </div>
 
 <div>
-  Thinks in terms of what <em>could happen</em> instead of what's happening.
+  <div em line>// Static</div>
+
+  About what could happen with values.
 </div>
 
 <div>
-  Dynamic means more expressive
-</div>
-
-<div>
-  Static means more general
+  <div line>"Dynamic" means more <em>expressive</em></div>
+  <div line>"Static" means more <em>general</em></div>
 </div>
 
 <div>
@@ -244,6 +249,27 @@ window.onload = function() {
 
 <div>
   A common way of doing static analysis is to think in terms of <em>types</em>.
+</div>
+
+<div>
+  <pre>
+
+    <em>// 1. write some code</em>
+
+    function addition(a, b) {
+      return a + b
+    }
+
+    <em>// 2. few thounsands lines of code later</em>
+
+    let n = null
+
+    <em>// 3. another few thounsands lines of code later</em>
+
+    addition(<span e>n</span>, 2)
+             ^
+      expected number but got null
+  </pre>
 </div>
 
 <div>
@@ -287,7 +313,6 @@ window.onload = function() {
   <div line>no syntax</div>
 </div>
 
-
 <div>
   TypeScript
   <div line>written in TypeScript</div>
@@ -306,12 +331,10 @@ window.onload = function() {
   <div line>good compat with JS tools</div>
 </div>
 
-
 <div>
-  <div line em>Type Systems:</div>
+  <div line em>Type Systems</div>
   <div line>Soundness</div>
   <div line>Type inference</div>
-  <div line>Structural vs. nominal</div>
 </div>
 
 <div>
@@ -347,10 +370,6 @@ window.onload = function() {
 </div>
 
 <div>
-  Flow is about soundness.
-</div>
-
-<div>
   <pre>
     function fetchCurrentUser(): ?User {
       ...
@@ -366,10 +385,6 @@ window.onload = function() {
 </div>
 
 <div>
-  Flow has powerful type <em>inference algorithm</em> which scales.
-</div>
-
-<div>
   <pre>
 
     <em>// need to annotate only exports</em>
@@ -380,6 +395,42 @@ window.onload = function() {
     <em>// <span g>infers</span> argument and return types!</em>
     function doAddition(a<span g>: number</span>, b<span g>: number</span>)<span g>: number</span> {
       return a + b
+    }
+  </pre>
+</div>
+
+<div>
+  <pre>
+    <em>// Flow: unions</em>
+
+    type MaybeLazyNumber =
+      | number
+      | () =&gt; number
+
+    function getNumber(n: MaybeLazyNumber): number {
+      if (typeof n === 'function') {
+        return n()
+      } else {
+        return n
+      }
+    }
+  </pre>
+</div>
+
+<div>
+  <pre>
+    <em>// Flow: intersections</em>
+
+    type Person = {
+      name: string;
+    }
+
+    type HasCat = {
+      theirCatName: string;
+    }
+
+    function hello(person: Person &amp; HasCat) {
+      console.log(`${person.name} has ${person.theirCatName} cat`)
     }
   </pre>
 </div>
@@ -451,7 +502,7 @@ window.onload = function() {
 
     class IsInteger {}
 
-    export type Integer = number & IsInteger;
+    export type Integer = number &amp; IsInteger;
 
     export function integer(a: number): ?Integer {
       return a % 1 === 0 ? ((a: any): Integer) : null
@@ -522,6 +573,11 @@ window.onload = function() {
 <div>
   <pre>
     <em>// Flow: variance</em>
+
+    TODO
+    TODO
+    TODO
+    TODO
   </pre>
 </div>
 
