@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
-<head><title></title>
+<head>
+<title>Static analysis for JavaScript</title>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
 <style type='text/css'>
@@ -29,6 +30,7 @@ a {
   background:#34d0e7;
   color:#000;
   text-decoration:none;
+	padding: 0 5px;
 }
 
 img {
@@ -176,11 +178,19 @@ window.onload = function() {
 <body>
 
 <div>
-  Static analysis for <em>JavaScript</em>
+	<div line style="margin-bottom: 0.5em">
+	  Types &amp; JavaScript
+	</div>
+	<div line style="font-size: 50%">
+		by <a href="https://twitter.com/andreypopp">@andreypopp</a>
+	</div>
 </div>
 
 <div>
-  Why?
+  <div em line>Reasons to use a type system?</div>
+  <div line>&nbsp;</div>
+  <div line>&nbsp;</div>
+  <div line>&nbsp;</div>
 </div>
 
 <div data-bodyclass="slide-error">
@@ -189,55 +199,102 @@ window.onload = function() {
   not<br>
   a<br>
   function
+
+  <notes>
+    - Очень частая ошибка
+    - Ошибка такого рода не одна
+    - Скучно и неинтересно дебажить
+    - Хочется чтобы их просто не было
+  </notes>
 </div>
 
 <div>
-  Static<br>
-  vs.<br>
-  dynamic
+  <div em line>Reasons to use a type system?</div>
+  <div line>1. Less bugs</div>
+  <div line>&nbsp;</div>
+  <div line>&nbsp;</div>
+
+  <notes>
+    - Типы позволяет уйти от "рутинных" ошибок
+    - Позволяют заниматься сложными проблемами
+  </notes>
+</div>
+
+<div>
+  <img src="westworld.png" />
+
+  <notes>
+    - Как тут что-то можно понять
+    - Как тут что-то можно поменять
+    - ... чтобы в другом месте не сломалось
+  </notes>
+</div>
+
+<div>
+  <div em line>Reasons to use a type system?</div>
+  <div line>1. Less bugs</div>
+  <div line>2. Safe refactorings</div>
+  <div line>&nbsp;</div>
+
+  <notes>
+    - Типы — это меньше стресса при рефакторингах
+    - Быстрый feedback loop — поменял-посмотрел что сломалось.
+    - Не замена тестам, а нужное дополнение
+    - Тесты становятся более понятными и полезными
+  </notes>
 </div>
 
 <div>
   <pre>
-    <em>// Dynamic analysis</em>
+    <em>// types are X-RAY for code</em>
 
-    if (typeof arg !== 'string') {
-      throw new Error('expected string')
+    function getUser(
+      id: number, <em>&lt;-- first arg is a number</em>
+      options: {skipCache: boolean} <em>&lt;-- second arg is an object</em>
+    ): Promise&lt;?User&gt; { <em>&lt;-- returns a promise with either null or User</em>
+      ...
     }
   </pre>
+
+  <notes>
+    - Типы — это XRAY для кода
+    - Типы — это полезная и *актуальная* документация/комментарии
+  </notes>
 </div>
 
 <div>
-  <div em line>// Dynamic</div>
+  <div em line>Reasons to use a type system?</div>
+  <div line>1. Less bugs</div>
+  <div line>2. Safe refactorings</div>
+  <div line>3. Easier to maintain</div>
 
-  Performs checks at runtime.
+  <notes>
+    - Типы делают код поддерживаемым
+    - Легко возврашаться к проекту после перерыва
+  </notes>
 </div>
 
 <div>
-  <div em line>// Dynamic</div>
-
-  About what's happening with values at some concrete moment of execution.
-</div>
-
-<div>
-  <div em line>// Static</div>
-
-  Extracts knowledge from code without exectuing it.
-</div>
-
-<div>
-  <div em line>// Static</div>
-
-  About what could happen with values.
-</div>
-
-<div>
-  <div line>"Dynamic" means more <em>expressive</em></div>
-  <div line>"Static" means more <em>general</em></div>
+  <div line>Types</div>
+  <div line>are</div>
+  <div em line>EASY</div>!!!!!!!!!
 </div>
 
 <div>
   ESLint
+  <div line>useful and easy to use</div>
+
+  <notes>
+    ESlint это инструмент, который вы скорее всего уже используете, он помогает
+    вам находить ошибки — например такие.
+  </notes>
+</div>
+
+<div>
+  <pre>
+    let someVariableName = '42'
+    console.log(someVriableName)
+  </pre>
 </div>
 
 <div>
@@ -245,30 +302,45 @@ window.onload = function() {
     let someVariableName = '42'
     console.log(<span e>someVriableName</span>)
   </pre>
-</div>
 
-<div>
-  A common way of doing static analysis is to think in terms of <em>types</em>.
+  <notes>
+    ESlint может такое обнаружить, к сожаление на этом его способности к
+    статическому анализу заканчиваются.
+  </notes>
 </div>
 
 <div>
   <pre>
+    let incomeByDay = [
+      {income: 12},
+      {income: 13}
+    ]
 
-    <em>// 1. write some code</em>
+    incomeByDay.push({incme: 15})
 
-    function addition(a, b) {
-      return a + b
-    }
+    let sum: number = incomeByDay.reduce(
+      (a, b) =&gt; a + b.income,
+      0
+    )
+  </pre>
+  <notes>
+    Чтобы поймать такой баг нужна уже система типов.
+  </notes>
+</div>
 
-    <em>// 2. few thounsands lines of code later</em>
+<div>
+  <pre>
+    let incomeByDay = [
+      {income: 12},
+      {income: 13}
+    ]
 
-    let n = null
+    incomeByDay.push({<span e>incme</span>: 15})
 
-    <em>// 3. another few thounsands lines of code later</em>
-
-    addition(<span e>n</span>, 2)
-             ^
-      expected number but got null
+    let sum: number = incomeByDay.reduce(
+      (a, b) =&gt; a + b.income,
+      0
+    )
   </pre>
 </div>
 
@@ -277,6 +349,9 @@ window.onload = function() {
   <div line>TypeScript</div>
   <div line>FlowType</div>
   <div line>...</div>
+  <notes>
+    - Типы в JS — что есть на "рынке"
+  </notes>
 </div>
 
 <div>
@@ -294,6 +369,16 @@ window.onload = function() {
       return a + b
     }
   </pre>
+  <notes>
+    - Нет синтаксиса, аннотации в комментариях
+  </notes>
+</div>
+
+<div>
+  Closure Compiler
+  <div line>Written in Java</div>
+  <div line>has JavaScript port</div>
+  <div line>no syntax</div>
 </div>
 
 <div>
@@ -304,13 +389,6 @@ window.onload = function() {
       return a + b
     }
   </pre>
-</div>
-
-<div>
-  Closure Compiler
-  <div line>Written in Java</div>
-  <div line>has JavaScript port</div>
-  <div line>no syntax</div>
 </div>
 
 <div>
@@ -333,8 +411,15 @@ window.onload = function() {
 
 <div>
   <div line em>Type Systems</div>
-  <div line>Soundness</div>
-  <div line>Type inference</div>
+  <div line>DX (Type inference, tooling, ...)</div>
+  <div line>Soundness (correctness, ...)</div>
+  <notes>
+    - О чем говорят, когда говорят о системах типов
+    - DX — насколько системой легко пользоваться
+    - Большая часть DX — type inferrence
+    - Soundness — понятие полноты, насколько система гармонична и
+      непротиворечива.
+  </notes>
 </div>
 
 <div>
@@ -382,11 +467,15 @@ window.onload = function() {
       // so that must be safe to use "user"
     }
   </pre>
+  <notes>
+    - Когда программист пишет код — он строит модель исполнения кода в голове.
+    - Это и есть CFA
+    - Flow может понять какие-то вещи, а какие то — нет.
+  </notes>
 </div>
 
 <div>
   <pre>
-
     <em>// need to annotate only exports</em>
     export function addition(a: number, b: number) {
       return doAddition(a, b)
@@ -395,6 +484,27 @@ window.onload = function() {
     <em>// <span g>infers</span> argument and return types!</em>
     function doAddition(a<span g>: number</span>, b<span g>: number</span>)<span g>: number</span> {
       return a + b
+    }
+  </pre>
+  <notes>
+    - Кстати, аннотации для экспортируемых символом (функций и значений) — это
+      хороший тон, ведь это документация!
+  </notes>
+</div>
+
+<div>
+  <pre>
+    <em>// Flow: objects</em>
+
+    type User = {
+      name: string;
+      age: number;
+    }
+
+    let user: User = {
+      name: 'John',
+      age: 25,
+      phone: '555-55-55'
     }
   </pre>
 </div>
@@ -429,8 +539,10 @@ window.onload = function() {
       theirCatName: string;
     }
 
-    function hello(person: Person &amp; HasCat) {
-      console.log(`${person.name} has ${person.theirCatName} cat`)
+    function hello(
+      person: Person &amp; HasCat
+    ) {
+      console.log(`${person.name} has cat named ${person.theirCatName}`)
     }
   </pre>
 </div>
@@ -571,14 +683,11 @@ window.onload = function() {
 </div>
 
 <div>
-  <pre>
-    <em>// Flow: variance</em>
-
-    TODO
-    TODO
-    TODO
-    TODO
-  </pre>
+  <em>Also:</em>
+  <div line><a href="https://github.com/flowtype/flow-typed">flow-typed</a></div>
+  <div line><a href="https://www.npmjs.com/package/eslint-plugin-flowtype-errors">eslint-plugin-flowtype-errors</a></div>
+  <div line><a href="https://github.com/facebookincubator/create-react-app/pull/1152/files#diff-1a70a857ffa3d5d63e3ce789ac645d17<Paste>">facebookincubator/create-react-app#1152</a></div>
+	<div line><a href="https://www.npmjs.com/package/flow-coverage-report">flow-coverage-report</a></div>
 </div>
 
 <div>
@@ -593,4 +702,16 @@ window.onload = function() {
   <div line>Haskell + GHCJS</div>
   <div line>F# + Fable</div>
   <div line>Elm</div>
+</div>
+
+<div>
+	<div style="margin-bottom: 0.5em">
+		Questions?
+	</div>
+	<div line style="font-size: 30%">
+		<a href="https://twitter.com/andreypopp">@andreypopp</a>
+	</div>
+	<div line style="font-size: 30%">
+		<a href="https://github.com/andreypopp">github.com/andreypopp</a>
+	</div>
 </div>
