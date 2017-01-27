@@ -233,7 +233,7 @@ window.onload = function() {
 <div>
   <div em line>Reasons to use a type system?</div>
   <div line>1. Less bugs</div>
-  <div line>2. Safe refactorings</div>
+  <div line>2. More safe to refactor</div>
   <div line>&nbsp;</div>
 
   <notes>
@@ -265,7 +265,7 @@ window.onload = function() {
 <div>
   <div em line>Reasons to use a type system?</div>
   <div line>1. Less bugs</div>
-  <div line>2. Safe refactorings</div>
+  <div line>2. More safe to refactor</div>
   <div line>3. Easier to maintain</div>
 
   <notes>
@@ -277,7 +277,7 @@ window.onload = function() {
 <div>
   <div line>Types</div>
   <div line>are</div>
-  <div em line>EASY</div>!!!!!!!!!
+  <div em line>easy</div>
 </div>
 
 <div>
@@ -345,9 +345,9 @@ window.onload = function() {
 </div>
 
 <div>
-  <div line>Closure Compiler</div>
   <div line>TypeScript</div>
   <div line>FlowType</div>
+  <div line>Closure Compiler</div>
   <div line>...</div>
   <notes>
     - Типы в JS — что есть на "рынке"
@@ -356,34 +356,14 @@ window.onload = function() {
 
 <div>
   <pre>
-    <em>// Syntax: Closure Compiler</em>
+    <em>// JavaScript code with types</em>
 
-    /**
-     * Performs an addition
-     *
-     * <em>@param {number}</em> a
-     * <em>@param {number}</em> b
-     * <em>@returns {number}</em>
-     */
-    function addition(a, b) {
-      return a + b
+    type User = {
+      name: string;
+      age: number;
     }
-  </pre>
-  <notes>
-    - Нет синтаксиса, аннотации в комментариях
-  </notes>
-</div>
 
-<div>
-  Closure Compiler
-  <div line>Written in Java</div>
-  <div line>has JavaScript port</div>
-  <div line>no syntax</div>
-</div>
-
-<div>
-  <pre>
-    <em>// Syntax: TypeScript &amp; FlowType</em>
+    let u: User = {name: 'John', age: 25}
 
     function addition(a: number, b: number): number {
       return a + b
@@ -392,27 +372,27 @@ window.onload = function() {
 </div>
 
 <div>
-  TypeScript
+  <div line em>TypeScript</div>
   <div line>written in TypeScript</div>
   <div line>compiles ES2015 to ES5*</div>
   <div line>no need for babel*</div>
   <div line>more syntax</div>
   <div line>feels like a language</div>
-  <div line>good DX</div>
 </div>
 
 <div>
-  FlowType
+  <div line em>FlowType</div>
   <div line>written in OCaml</div>
   <div line>just typechecks</div>
   <div line>you need babel</div>
-  <div line>good compat with JS tools</div>
+  <div line>compat with JS tools</div>
 </div>
 
 <div>
   <div line em>Type Systems</div>
   <div line>DX (Type inference, tooling, ...)</div>
   <div line>Soundness (correctness, ...)</div>
+  <div line>Ecosystem</div>
   <notes>
     - О чем говорят, когда говорят о системах типов
     - DX — насколько системой легко пользоваться
@@ -456,15 +436,21 @@ window.onload = function() {
 
 <div>
   <pre>
-    function fetchCurrentUser(): ?User {
+    <em>// define.js</em>
+
+    function fetchCurrentUser(): ?{user: string} {
       ...
     }
 
+    <em>// use.js</em>
+
     let user = fetchCurrentUser()
 
+    console.log(<span e>user.name</span>)
+
     if (user != null) {
-      // hm... we checked for != null
-      // so that must be safe to use "user"
+      // hm... we checked for != null so that must be safe to use "user"
+      console.log(<span g>user.name</span>)
     }
   </pre>
   <notes>
