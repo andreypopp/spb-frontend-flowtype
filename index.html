@@ -47,6 +47,7 @@ body > div {
   line-height:97%;
 }
 
+div[c],
 div.center {
   text-align:center;
 }
@@ -179,7 +180,7 @@ window.onload = function() {
 
 <div>
 	<div line style="margin-bottom: 0.5em">
-	  Types &amp; JavaScript
+	  Static type checking &amp; JavaScript
 	</div>
 	<div line style="font-size: 50%">
 		by <a href="https://twitter.com/andreypopp">@andreypopp</a>
@@ -187,18 +188,14 @@ window.onload = function() {
 </div>
 
 <div>
-  <div em line>Reasons to use a type system?</div>
+  <div em line>Reasons for static type checking?</div>
   <div line>&nbsp;</div>
   <div line>&nbsp;</div>
   <div line>&nbsp;</div>
 </div>
 
 <div data-bodyclass="slide-error">
-  undefined<br>
-  is<br>
-  not<br>
-  a<br>
-  function
+  <div line>undefined is not a function</div>
 
   <notes>
     - Очень частая ошибка
@@ -209,7 +206,7 @@ window.onload = function() {
 </div>
 
 <div>
-  <div em line>Reasons to use a type system?</div>
+  <div em line>Reasons for static type checking?</div>
   <div line>1. Less bugs</div>
   <div line>&nbsp;</div>
   <div line>&nbsp;</div>
@@ -231,9 +228,9 @@ window.onload = function() {
 </div>
 
 <div>
-  <div em line>Reasons to use a type system?</div>
+  <div em line>Reasons for static type checking?</div>
   <div line>1. Less bugs</div>
-  <div line>2. More safe to refactor</div>
+  <div line>2. Safe refactorings</div>
   <div line>&nbsp;</div>
 
   <notes>
@@ -263,49 +260,18 @@ window.onload = function() {
 </div>
 
 <div>
-  <div em line>Reasons to use a type system?</div>
+  <img srcset="x-ray.png 2x" />
+</div>
+
+<div>
+  <div em line>Reasons for static type checking?</div>
   <div line>1. Less bugs</div>
-  <div line>2. More safe to refactor</div>
+  <div line>2. Safe refactorings</div>
   <div line>3. Easier to maintain</div>
 
   <notes>
     - Типы делают код поддерживаемым
     - Легко возврашаться к проекту после перерыва
-  </notes>
-</div>
-
-<div>
-  <div line>Types</div>
-  <div line>are</div>
-  <div em line>easy</div>
-</div>
-
-<div>
-  ESLint
-  <div line>useful and easy to use</div>
-
-  <notes>
-    ESlint это инструмент, который вы скорее всего уже используете, он помогает
-    вам находить ошибки — например такие.
-  </notes>
-</div>
-
-<div>
-  <pre>
-    let someVariableName = '42'
-    console.log(someVriableName)
-  </pre>
-</div>
-
-<div>
-  <pre>
-    let someVariableName = '42'
-    console.log(<span e>someVriableName</span>)
-  </pre>
-
-  <notes>
-    ESlint может такое обнаружить, к сожаление на этом его способности к
-    статическому анализу заканчиваются.
   </notes>
 </div>
 
@@ -323,9 +289,6 @@ window.onload = function() {
       0
     )
   </pre>
-  <notes>
-    Чтобы поймать такой баг нужна уже система типов.
-  </notes>
 </div>
 
 <div>
@@ -356,8 +319,6 @@ window.onload = function() {
 
 <div>
   <pre>
-    <em>// JavaScript code with types</em>
-
     type User = {
       name: string;
       age: number;
@@ -406,6 +367,7 @@ window.onload = function() {
   <pre>
     <em>// Type inference in TypeScript</em>
 
+
     export function addition(a: number, b: number) {
       return doAddition(a, b)
     }
@@ -419,11 +381,32 @@ window.onload = function() {
 
 <div>
   <pre>
+    <em>// Type inference in FlowType</em>
+
+    <em>// need to annotate only exports</em>
+    export function addition(a: number, b: number) {
+      return doAddition(a, b)
+    }
+
+    <em>// <span g>infers</span> argument and return types!</em>
+    function doAddition(a<span g>: number</span>, b<span g>: number</span>)<span g>: number</span> {
+      return a + b
+    }
+  </pre>
+  <notes>
+    - Кстати, аннотации для экспортируемых символом (функций и значений) — это
+      хороший тон, ведь это документация!
+  </notes>
+</div>
+
+
+<div>
+  <pre>
     <em>// "Soundness" in TypeScript</em>
 
     let promisedString: Promise&lt;string&gt; = new Promise(
       resolve =&gt; {
-        <em>// 💩💩💩💩💩💩💩</em>
+        <em>// Perfectly valid in TypeScript!</em>
         resolve(<span e>42</span>)
       }
     )
@@ -438,8 +421,8 @@ window.onload = function() {
   <pre>
     <em>// define.js</em>
 
-    function fetchCurrentUser(): ?{user: string} {
-      ...
+    function fetchCurrentUser() {
+      return hasCurrentUser ? {name: 'John'} : null
     }
 
     <em>// use.js</em>
@@ -462,24 +445,6 @@ window.onload = function() {
 
 <div>
   <pre>
-    <em>// need to annotate only exports</em>
-    export function addition(a: number, b: number) {
-      return doAddition(a, b)
-    }
-
-    <em>// <span g>infers</span> argument and return types!</em>
-    function doAddition(a<span g>: number</span>, b<span g>: number</span>)<span g>: number</span> {
-      return a + b
-    }
-  </pre>
-  <notes>
-    - Кстати, аннотации для экспортируемых символом (функций и значений) — это
-      хороший тон, ведь это документация!
-  </notes>
-</div>
-
-<div>
-  <pre>
     <em>// Flow: objects</em>
 
     type User = {
@@ -492,6 +457,7 @@ window.onload = function() {
       age: 25,
       phone: '555-55-55'
     }
+
   </pre>
 </div>
 
@@ -510,6 +476,10 @@ window.onload = function() {
         return n
       }
     }
+
+    getNumber(42)
+    getNumber(() =&gt; computeFactorial(42))
+    getNumber(<span e>'oops'</span>)
   </pre>
 </div>
 
